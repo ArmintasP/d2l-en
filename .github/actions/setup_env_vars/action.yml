@@ -34,7 +34,7 @@ runs:
 
 
     - name: Get Commit SHA (For Pull Request)
-      if: ${{ github.event_name == 'pull_request' }}
+      if: ${{ github.event_name == 'pull_request_target' }}
       shell: bash
       env:
         SHA: ${{ github.event.pull_request.head.sha }}

@@ -6,7 +6,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "gh-actions" ]
-  pull_request:
+  pull_request_target:
     branches: [ "gh-actions" ]
 
 jobs:
@@ -104,7 +104,9 @@ jobs:
           echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
           # MXNet doesn't support numpy>=1.24
           # https://github.com/apache/mxnet/issues/21165
-          pip install "numpy<=1.23"
+          pip install "numpy<=1.23.5"
+          # Disable running performance tests to find best conv algo
+          export MXNET_CUDNN_AUTOTUNE_DEFAULT=0
           ./static/cache.sh restore _build/eval_mxnet/data
           d2lbook build eval --tab mxnet
           ./static/cache.sh store _build/eval_mxnet/data
@@ -125,13 +127,13 @@ jobs:
           d2lbook build pdf --tab mxnet
 
       - name: Publish Preview
-        if: ${{ (env.TARGET_BRANCH != 'release') || (github.event_name == 'pull_request') }}
+        if: ${{ (env.TARGET_BRANCH != 'release') || (github.event_name == 'pull_request_target') }}
         run: |
           conda activate ${{ env.CONDA_ENV_NAME }}
           d2lbook deploy html pdf --s3 s3://preview.d2l.ai/${{ env.JOB_NAME }}
 
       - name: Comment on PR
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request_target' }}
         uses: peter-evans/create-or-update-comment@v2.0.0
         with:
           issue-number: ${{ github.event.number }}
