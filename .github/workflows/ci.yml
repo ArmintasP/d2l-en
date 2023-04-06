@@ -12,7 +12,7 @@ on:
 jobs:
   build_and_publish:
     name: Build & Publish
-    if: (github.repository == 'd2l-ai/d2l-en') && ("!contains(github.event.head_commit.message, 'skip build')")
+    if: "github.repository == 'd2l-ai/d2l-en' && !contains(github.event.head_commit.message, '[ci skip]')"
     runs-on: p3.16xl
     defaults:
       run:
