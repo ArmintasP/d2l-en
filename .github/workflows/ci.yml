@@ -12,7 +12,7 @@ on:
 jobs:
   build_and_publish:
     name: Build & Publish
-    if: "github.repository == 'd2l-ai/d2l-en' && !contains(github.event.head_commit.message, '[ci skip]')"
+    if: "github.repository == 'd2l-ai/d2l-en' && !contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: p3.16xl
     defaults:
       run:
@@ -59,6 +59,7 @@ jobs:
           # TODO: Add checks for all frameworks config correctly for GPUs
 
       - name: Execute Notebooks [PyTorch]
+        if: "!contains(github.event.head_commit.message, '[skip torch]')"
         run: |
           conda activate ${{ env.CONDA_ENV_NAME }}
           echo "PATH=$PATH"
@@ -69,6 +70,7 @@ jobs:
           ./static/cache.sh store _build/eval/data
 
       - name: Execute Notebooks [Jax]
+        if: "!contains(github.event.head_commit.message, '[skip jax]')"
         run: |
           conda activate ${{ env.CONDA_ENV_NAME }}
           echo "PATH=$PATH"
@@ -81,6 +83,7 @@ jobs:
           ./static/cache.sh store _build/eval_jax/data
 
       - name: Execute Notebooks [TensorFlow]
+        if: "!contains(github.event.head_commit.message, '[skip tf]')"
         run: |
           conda activate ${{ env.CONDA_ENV_NAME }}
           # Setup CUDNN PATH for Tensorflow
@@ -118,11 +121,13 @@ jobs:
           ./static/build_html.sh ${{ env.TARGET_BRANCH }} ${{ env.JOB_NAME }}
 
       - name: Build PDF [PyTorch]
+        if: "!contains(github.event.head_commit.message, '[skip torch]')"
         run: |
           conda activate ${{ env.CONDA_ENV_NAME }}
           d2lbook build pdf
 
       - name: Build PDF [MXNet]
+        if: "!contains(github.event.head_commit.message, '[skip mxnet]')"
         run: |
           conda activate ${{ env.CONDA_ENV_NAME }}
           d2lbook build pdf --tab mxnet
