@@ -95,6 +95,7 @@ jobs:
           ./static/cache.sh store _build/eval_tensorflow/data
 
       - name: Execute Notebooks [MXNet]
+        if: "!contains(github.event.head_commit.message, '[skip mxnet]')"
         run: |
           conda activate ${{ env.CONDA_ENV_NAME }}
           # Use CUDA 10.2 & CUDNN 8.3.1 for MXNet v1.7.0
