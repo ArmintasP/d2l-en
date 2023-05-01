@@ -244,7 +244,7 @@ $$J(\mathcal{A},\mathcal{B}) = \frac{\left|\mathcal{A} \cap \mathcal{B}\right|}{
 
 In fact, we can consider the pixel area of any bounding box as a set of pixels. 
 In this way, we can measure the similarity of the two bounding boxes by the Jaccard index of their pixel sets. For two bounding boxes, we usually refer their Jaccard index as *intersection over union* (*IoU*), which is the ratio of their intersection area to their union area, as shown in :numref:`fig_iou`.
-The range of an IoU is between 0 and 1:
+The range of an IoU is between 0 and 1.
 0 means that two bounding boxes do not overlap at all,
 while 1 indicates that the two bounding boxes are equal.
 
